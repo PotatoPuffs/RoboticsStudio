@@ -23,29 +23,23 @@ private:
        // Create a new LaserScan message for publishing
         auto new_scan = std::make_shared<sensor_msgs::msg::LaserScan>(*msg);
 
-        // Initialize the new ranges and intensities with infinity (or NaN)
-        std::vector<float> new_ranges(msg->ranges.size(), std::numeric_limits<float>::infinity());
-        std::vector<float> new_intensities(msg->intensities.size(), std::numeric_limits<float>::quiet_NaN());
+        // Initialise the new ranges  with infinity (or NaN)
+        std::vector<float> new_ranges(msg->ranges.size(), std::numeric_limits<float>::infinity()); // distance measurement at every nth angle
+    
 
         for (size_t i = 0; i < msg->ranges.size(); i += n_) {
-            new_ranges[i] = msg->ranges[i];
-            if (!msg->intensities.empty()) {
-                new_intensities[i] = msg->intensities[i];
-            }
+            new_ranges[i] = msg->ranges[i]; // Keep every nth range
         }
 
-        // Update the ranges and intensities in the new scan
-        new_scan->ranges = new_ranges;
-        if (!msg->intensities.empty()) {
-            new_scan->intensities = new_intensities;
-        }
+        // Update the ranges in the new scan
+        new_scan->ranges = new_ranges; 
 
         // Print the modified laser scan data
         RCLCPP_INFO(this->get_logger(), "Processed scan data:");
         for (size_t i = 0; i < new_ranges.size(); ++i) {
             if (i % n_ == 0) {
-                RCLCPP_INFO(this->get_logger(), "[Angle Index %zu]: Range = %f, Intensity = %f", 
-                            i, new_ranges[i], new_intensities[i]);
+                RCLCPP_INFO(this->get_logger(), "[Angle Index %zu]: Range = %f", 
+                            i, new_ranges[i]);
             }
         }
 
