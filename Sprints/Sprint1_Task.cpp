@@ -14,7 +14,7 @@ public:
         scan_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("/scan_processed", 10);
 
         // Set the value for n (e.g., every nth point)
-        n_ = 5;  // This value can be modified based on your requirement
+        n_ = 20;  // This value can be modified based on your requirement
     }
 
 private:
