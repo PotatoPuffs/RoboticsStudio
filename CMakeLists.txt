@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(RoboticsStudio)
+project(robotics_studio)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -25,6 +25,11 @@ install(TARGETS
   laser_scanner
   sprint_one
   DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY
+  launch
+  worlds
+  DESTINATION share/${PROJECT_NAME})
 
 
 ament_package()
