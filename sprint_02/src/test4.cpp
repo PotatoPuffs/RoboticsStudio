@@ -1,50 +1,114 @@
-//Sprint 2 lab 5 code
+//Correct maps shown
+//Sprint 2 lab 5 code and map processor
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <vector>
+#include <iostream>
+
+
 
 class ScanToImageNode : public rclcpp::Node {
 public:
     ScanToImageNode() : Node("scan_to_image_node"), angle_difference_(0.0), relative_orientaion_(0.0) {
+        subscription_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+            "/map", 10, std::bind(&ScanToImageNode::mapCallback, this, std::placeholders::_1));
+
+
         scan_subscriber_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
             "/scan", 10, std::bind(&ScanToImageNode::scanCallback, this, std::placeholders::_1));
+
         cmd_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
         RCLCPP_INFO(this->get_logger(), "Scan to Image Node started.");
+
+        cv::namedWindow(WINDOW1, cv::WINDOW_AUTOSIZE);
     }
 
 private:
+
+    void mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr mapMsg)
+    {
+        std::cout << "mapCallback" << std::endl;
+
+        occupancyGridToImage(mapMsg);
+
+        map_image_ = m_MapColImage.clone();
+        
+        cv::rotate(map_image_, map_image_, cv::ROTATE_90_COUNTERCLOCKWISE);
+
+        cv::imshow(WINDOW1, map_image_);
+        cv::waitKey(30);
+        map_received_ = true;
+    }
+
+    void occupancyGridToImage(const nav_msgs::msg::OccupancyGrid::SharedPtr grid)
+    {
+        int grid_data;
+        unsigned int row, col, val;
+
+        m_temp_img = cv::Mat::zeros(grid->info.height, grid->info.width, CV_8UC1);
+
+        std::cout << "DataParse started for map: " << grid->header.stamp.sec << " Dim: " << grid->info.height << "x" << grid->info.width << std::endl;
+
+        for (row = 0; row < grid->info.height; row++) {
+            for (col = 0; col < grid->info.width; col++) {
+                grid_data = grid->data[row * grid->info.width + col];
+                if (grid_data != -1) {
+                    val = 255 - (255 * grid_data) / 100;
+                    val = (val == 0) ? 255 : 0;
+                    m_temp_img.at<uchar>(grid->info.height - row - 1, col) = val;
+                } else {
+                    m_temp_img.at<uchar>(grid->info.height - row - 1, col) = 0;
+                }
+            }
+        }
+
+        map_scale_ = grid->info.resolution;
+        origin_x = grid->info.origin.position.x;
+        origin_y = grid->info.origin.position.y;
+        size_x = grid->info.width;
+        size_y = grid->info.height;
+
+        cv::Mat kernel = (cv::Mat_<uchar>(3, 3) << 0, 0, 0,
+                                    0, 1, 0,
+                                    0, 0, 0);
+        cv::erode(m_temp_img, m_MapBinImage, kernel);
+
+        m_MapColImage.create(m_MapBinImage.size(), CV_8UC3);
+        cv::cvtColor(m_MapBinImage, m_MapColImage, cv::COLOR_GRAY2BGR);
+
+        std::cout << "Occupancy grid map converted to a binary image\n";
+
+        // // Display the image to verify
+        // cv::imshow("Occupancy Grid", m_MapColImage);
+        // cv::waitKey(1);
+    }
+
     void scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
         // Convert LaserScan to cv::Mat (polar coordinates to Cartesian)
+        
         cv::Mat img = laserScanToMat(msg);
 
-        if (!first_image_captured_) {
+        if (map_received_) {
             first_image_ = img.clone();
             first_image_captured_ = true;
             // Display the first image
             cv::imshow("First Image", first_image_);
             cv::waitKey(1);  // Add this to process GUI events and update the window
             // Rotate the robot by publishing to cmd_vel
-            // rotateRobot();
-        } else if (!second_image_captured_) {
-            second_image_ = img.clone();
-            second_image_captured_ = true;
-            // Display the second image
-            cv::imshow("Second Image", second_image_);
-            cv::waitKey(1);  // Add this to process GUI events and update the window
-            // Calculate the change in yaw using cv::transform
-        } else {
-            first_image_ = second_image_.clone();
-            second_image_ = img.clone();
-            // Display the new second image
-            cv::imshow("Second Image", second_image_);
-            cv::waitKey(1);  // Add this to process GUI events and update the window
-
-            calculateYawChange();
+      
+           
             relative_orientaion_ = relative_orientaion_ + angle_difference_;
             RCLCPP_INFO(this->get_logger(), "Relative Orientation: %f", relative_orientaion_);
+            
+            calculateYawChange();
+            RCLCPP_INFO(this->get_logger(), "Relative cheese");
+            rotateRobot();
         }
+         
     }
 
     cv::Mat laserScanToMat(const sensor_msgs::msg::LaserScan::SharedPtr& scan) {
@@ -68,26 +132,35 @@ private:
     }
 
 
+    void rotateRobot() {
+        const double rotation_speed = 0.2;
+        const double threshold = 1;
+        double angle_adj = angle_difference_; //angle adjusted
+        double angle_adj_rads = angle_adj * M_PI / 180.0;
 
+        double duration_sec = std::abs(angle_adj_rads) / rotation_speed;
+        int duration_ms = duration_sec*1000;
 
-    // void rotateRobot() {
-    //     auto twist_msg = geometry_msgs::msg::Twist();
-    //     twist_msg.angular.z = 1.0;  // Rotate with some angular velocity
-    //     cmd_publisher_->publish(twist_msg);
+        auto twist_msg = geometry_msgs::msg::Twist();
+        twist_msg.angular.z = rotation_speed * (angle_adj_rads > 0 ? 1.0 : -1.0);  // Rotate with some angular velocity
+        cmd_publisher_->publish(twist_msg);
 
-    //     // Sleep for a while to allow the robot to rotate
-    //     rclcpp::sleep_for(std::chrono::seconds(2));
+        // Sleep for a while to allow the robot to rotate
+        rclcpp::sleep_for(std::chrono::milliseconds(duration_ms));
 
-    //     // Stop rotation
-    //     twist_msg.angular.z = 0.0;
-    //     cmd_publisher_->publish(twist_msg);
-    // }
+        // Stop rotation
+        twist_msg.angular.z = 0.0;
+        cmd_publisher_->publish(twist_msg);
+
+        //robot_rotated = true;
+    }
 
     void calculateYawChange() {
+        RCLCPP_INFO(this->get_logger(), "AH.");
         // Detect and match features between the first and second images
         std::vector<cv::Point2f> srcPoints, dstPoints;
-        detectAndMatchFeatures(first_image_, second_image_, srcPoints, dstPoints);
-
+        detectAndMatchFeatures(first_image_, map_image_, srcPoints, dstPoints);
+        RCLCPP_INFO(this->get_logger(), "AH2.");
         if (srcPoints.size() < 3 || dstPoints.size() < 3) {
             RCLCPP_ERROR(this->get_logger(), "Not enough points for affine transformation.");
             return;
@@ -141,13 +214,26 @@ private:
 
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_subscriber_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_publisher_;
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr subscription_;
 
-    cv::Mat first_image_, second_image_;
+    cv::Mat first_image_, map_image_;
     bool first_image_captured_ = false;
     bool second_image_captured_ = false;
+    bool map_received_ = false;
 
     double angle_difference_;
     double relative_orientaion_ = 0.0;
+
+    cv::Mat m_temp_img;
+    cv::Mat m_MapBinImage;
+    cv::Mat m_MapColImage;
+    double map_scale_;
+    double origin_x;
+    double origin_y;
+    unsigned int size_x;
+    unsigned int size_y;
+
+    const std::string WINDOW1 = "Map Image";
 };
 
 int main(int argc, char* argv[]) {
