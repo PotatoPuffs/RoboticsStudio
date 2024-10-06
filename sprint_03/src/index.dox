@@ -1,0 +1,34 @@
+/**
+ * @mainpage RoboticsStudio Sprint 3 Documentation
+ *
+ * @section intro_sec Introduction
+ *
+ * This documentation provides an overview of the project's code, including details about the key components and functionalities.
+ * 
+ * @section contents_sec Project Contents for SLO 3.6 of Sprint 3
+ * 
+ * - **Cylinder Detection**: The system processes laser scan data to detect a cylindrical object with a known diameter (30cm). 
+ *   It uses simple logic to filter out noise and identify the object based on range data from the scan.
+ * 
+ * - **Coordinate Transformation**: Once the object is detected, its coordinates are transformed from the robot's 
+ *   local `base_link` frame to the global `map` frame using the `tf2` library.
+ * 
+ * - **Visualization in RViz**: After the transformation, the detected cylinder's position is published and visualized 
+ *   in RViz as a green cylindrical marker, making it easy to see the object's location in the map.
+ * 
+ * @section usage_sec Code Overview and How It Works
+ * 
+ * The core functionality of the project is implemented in the `CylinderDetector` class, which:
+ * 
+ * - **Subscribes** to the `/scan` topic to receive laser scan data.
+ * - **Processes** the scan data to detect a cylindrical object.
+ * - **Transforms** the detected object's coordinates from the robot's frame to the map frame using `tf2`.
+ * - **Publishes** the detected object’s pose on the `/cylinder_pose` topic and a marker for RViz on the `/visualization_marker` topic.
+ * 
+ * @section guide_sec Guide to Using the Documentation
+ * 
+ * - **Classes**: Detailed explanations of the key classes (e.g., `CylinderDetector`), including methods for subscribing to scan data, detecting objects, and transforming coordinates.
+ * - **Files**: Breakdown of the project's source code files, including `test2.cpp` and `sprint_two.cpp`, which implement the core functionalities.
+ * - **Visualization**: Instructions on setting up and visualizing the detected object in RViz.
+ *
+ */

@@ -1,0 +1,23 @@
+\hypertarget{index_intro_sec}{}\doxysection{Introduction}\label{index_intro_sec}
+This documentation provides an overview of the project\textquotesingle{}s code, including details about the key components and functionalities.\hypertarget{index_contents_sec}{}\doxysection{Project Contents for SLO 3.\+6 of Sprint 3}\label{index_contents_sec}
+
+\begin{DoxyItemize}
+\item {\bfseries{Cylinder Detection}}\+: The system processes laser scan data to detect a cylindrical object with a known diameter (30cm). It uses simple logic to filter out noise and identify the object based on range data from the scan.
+\item {\bfseries{Coordinate Transformation}}\+: Once the object is detected, its coordinates are transformed from the robot\textquotesingle{}s local {\ttfamily base\+\_\+link} frame to the global {\ttfamily map} frame using the {\ttfamily tf2} library.
+\item {\bfseries{Visualization in RViz}}\+: After the transformation, the detected cylinder\textquotesingle{}s position is published and visualized in RViz as a green cylindrical marker, making it easy to see the object\textquotesingle{}s location in the map.
+\end{DoxyItemize}\hypertarget{index_usage_sec}{}\doxysection{Code Overview and How It Works}\label{index_usage_sec}
+The core functionality of the project is implemented in the {\ttfamily \mbox{\hyperlink{classCylinderDetector}{Cylinder\+Detector}}} class, which\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Subscribes}} to the {\ttfamily /scan} topic to receive laser scan data.
+\item {\bfseries{Processes}} the scan data to detect a cylindrical object.
+\item {\bfseries{Transforms}} the detected object\textquotesingle{}s coordinates from the robot\textquotesingle{}s frame to the map frame using {\ttfamily tf2}.
+\item {\bfseries{Publishes}} the detected object’s pose on the {\ttfamily /cylinder\+\_\+pose} topic and a marker for RViz on the {\ttfamily /visualization\+\_\+marker} topic.
+\end{DoxyItemize}\hypertarget{index_guide_sec}{}\doxysection{Guide to Using the Documentation}\label{index_guide_sec}
+
+\begin{DoxyItemize}
+\item {\bfseries{Classes}}\+: Detailed explanations of the key classes (e.\+g., {\ttfamily \mbox{\hyperlink{classCylinderDetector}{Cylinder\+Detector}}}), including methods for subscribing to scan data, detecting objects, and transforming coordinates.
+\item {\bfseries{Files}}\+: Breakdown of the project\textquotesingle{}s source code files, including {\ttfamily \mbox{\hyperlink{test2_8cpp}{test2.\+cpp}}} and {\ttfamily sprint\+\_\+two.\+cpp}, which implement the core functionalities.
+\item {\bfseries{Visualization}}\+: Instructions on setting up and visualizing the detected object in RViz. 
+\end{DoxyItemize}

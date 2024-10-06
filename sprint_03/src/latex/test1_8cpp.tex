@@ -1,0 +1,84 @@
+\hypertarget{test1_8cpp}{}\doxysection{test1.\+cpp File Reference}
+\label{test1_8cpp}\index{test1.cpp@{test1.cpp}}
+{\ttfamily \#include $<$rclcpp/rclcpp.\+hpp$>$}\newline
+{\ttfamily \#include $<$sensor\+\_\+msgs/msg/laser\+\_\+scan.\+hpp$>$}\newline
+{\ttfamily \#include $<$geometry\+\_\+msgs/msg/point\+\_\+stamped.\+hpp$>$}\newline
+{\ttfamily \#include $<$visualization\+\_\+msgs/msg/marker.\+hpp$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+Include dependency graph for test1.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{test1_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{test1_8cpp_abe8243691d568000f18718402a9a9bf9}{calculate\+Distance}} (double range1, double range2, double angle\+\_\+diff)
+\item 
+std\+::vector$<$ float $>$ \mbox{\hyperlink{test1_8cpp_a94646f49f72b57f1990c312d40f0e73a}{filter\+Cylindrical\+Object}} (const sensor\+\_\+msgs\+::msg\+::\+Laser\+Scan\+::\+Shared\+Ptr scan)
+\item 
+void \mbox{\hyperlink{test1_8cpp_ad50332b4ac5a9edb63ebff63d57bc70d}{laser\+Callback}} (const sensor\+\_\+msgs\+::msg\+::\+Laser\+Scan\+::\+Shared\+Ptr scan)
+\item 
+int \mbox{\hyperlink{test1_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+rclcpp\+::\+Publisher$<$ sensor\+\_\+msgs\+::msg\+::\+Laser\+Scan $>$\+::Shared\+Ptr \mbox{\hyperlink{test1_8cpp_a8d2d322d133a4390731449d57abfc9d3}{filtered\+\_\+scan\+\_\+pub}}
+\item 
+rclcpp\+::\+Publisher$<$ geometry\+\_\+msgs\+::msg\+::\+Point\+Stamped $>$\+::Shared\+Ptr \mbox{\hyperlink{test1_8cpp_aba2a6d6172cc1ab2031c942187401cfe}{cylinder\+\_\+position\+\_\+pub}}
+\item 
+rclcpp\+::\+Publisher$<$ visualization\+\_\+msgs\+::msg\+::\+Marker $>$\+::Shared\+Ptr \mbox{\hyperlink{test1_8cpp_a6f0b70c100a557ed5b7a671a5c463b90}{marker\+\_\+pub}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{test1_8cpp_abe8243691d568000f18718402a9a9bf9}\label{test1_8cpp_abe8243691d568000f18718402a9a9bf9}} 
+\index{test1.cpp@{test1.cpp}!calculateDistance@{calculateDistance}}
+\index{calculateDistance@{calculateDistance}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{calculateDistance()}{calculateDistance()}}
+{\footnotesize\ttfamily double calculate\+Distance (\begin{DoxyParamCaption}\item[{double}]{range1,  }\item[{double}]{range2,  }\item[{double}]{angle\+\_\+diff }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test1_8cpp_a94646f49f72b57f1990c312d40f0e73a}\label{test1_8cpp_a94646f49f72b57f1990c312d40f0e73a}} 
+\index{test1.cpp@{test1.cpp}!filterCylindricalObject@{filterCylindricalObject}}
+\index{filterCylindricalObject@{filterCylindricalObject}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{filterCylindricalObject()}{filterCylindricalObject()}}
+{\footnotesize\ttfamily std\+::vector$<$float$>$ filter\+Cylindrical\+Object (\begin{DoxyParamCaption}\item[{const sensor\+\_\+msgs\+::msg\+::\+Laser\+Scan\+::\+Shared\+Ptr}]{scan }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test1_8cpp_ad50332b4ac5a9edb63ebff63d57bc70d}\label{test1_8cpp_ad50332b4ac5a9edb63ebff63d57bc70d}} 
+\index{test1.cpp@{test1.cpp}!laserCallback@{laserCallback}}
+\index{laserCallback@{laserCallback}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{laserCallback()}{laserCallback()}}
+{\footnotesize\ttfamily void laser\+Callback (\begin{DoxyParamCaption}\item[{const sensor\+\_\+msgs\+::msg\+::\+Laser\+Scan\+::\+Shared\+Ptr}]{scan }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test1_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{test1_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{test1.cpp@{test1.cpp}!main@{main}}
+\index{main@{main}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{test1_8cpp_aba2a6d6172cc1ab2031c942187401cfe}\label{test1_8cpp_aba2a6d6172cc1ab2031c942187401cfe}} 
+\index{test1.cpp@{test1.cpp}!cylinder\_position\_pub@{cylinder\_position\_pub}}
+\index{cylinder\_position\_pub@{cylinder\_position\_pub}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{cylinder\_position\_pub}{cylinder\_position\_pub}}
+{\footnotesize\ttfamily rclcpp\+::\+Publisher$<$geometry\+\_\+msgs\+::msg\+::\+Point\+Stamped$>$\+::Shared\+Ptr cylinder\+\_\+position\+\_\+pub}
+
+\mbox{\Hypertarget{test1_8cpp_a8d2d322d133a4390731449d57abfc9d3}\label{test1_8cpp_a8d2d322d133a4390731449d57abfc9d3}} 
+\index{test1.cpp@{test1.cpp}!filtered\_scan\_pub@{filtered\_scan\_pub}}
+\index{filtered\_scan\_pub@{filtered\_scan\_pub}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{filtered\_scan\_pub}{filtered\_scan\_pub}}
+{\footnotesize\ttfamily rclcpp\+::\+Publisher$<$sensor\+\_\+msgs\+::msg\+::\+Laser\+Scan$>$\+::Shared\+Ptr filtered\+\_\+scan\+\_\+pub}
+
+\mbox{\Hypertarget{test1_8cpp_a6f0b70c100a557ed5b7a671a5c463b90}\label{test1_8cpp_a6f0b70c100a557ed5b7a671a5c463b90}} 
+\index{test1.cpp@{test1.cpp}!marker\_pub@{marker\_pub}}
+\index{marker\_pub@{marker\_pub}!test1.cpp@{test1.cpp}}
+\doxysubsubsection{\texorpdfstring{marker\_pub}{marker\_pub}}
+{\footnotesize\ttfamily rclcpp\+::\+Publisher$<$visualization\+\_\+msgs\+::msg\+::\+Marker$>$\+::Shared\+Ptr marker\+\_\+pub}
+
