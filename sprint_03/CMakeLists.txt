@@ -25,6 +25,8 @@ ament_target_dependencies(test2 rclcpp sensor_msgs geometry_msgs visualization_m
 install(TARGETS
   test1
   test2
+  launch
+  worlds
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
