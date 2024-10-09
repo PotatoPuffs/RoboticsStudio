@@ -31,7 +31,7 @@ def generate_launch_description():
     y_pose = LaunchConfiguration('y_pose', default='-0.5')
 
     world = os.path.join(
-        get_package_share_directory('sprint_01'),
+        get_package_share_directory('sprint_03'),
         'worlds',
         'rs1_project_world.world'
     )
